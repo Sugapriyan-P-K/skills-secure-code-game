@@ -26,10 +26,10 @@ def validorder(order: Order):
     for item in order.items:
         if item.type == 'payment':
             if item.amount > -1 * max_item_amount and item.amount < max_item_amount:
-                net += int(item.amount)
+                net += int(item.amount) # solution is Decimal(str(item.amount))
         elif item.type == 'product':
             if item.quantity > 0 and item.quantity <= max_quantity and item.amount > 0 and item.amount <= max_item_amount:
-                net -= int(item.amount) * item.quantity
+                net -= int(item.amount) * item.quantity # same here Decimal(str(item.amount))
             if net > max_total or net < -1 * max_total:
                 return ("max amount exceeded")
         else:
