@@ -16,18 +16,26 @@ from collections import namedtuple
 Order = namedtuple('Order', 'id, items')
 Item = namedtuple('Item', 'type, description, amount, quantity')
 
+max_item_amount = 100000
+max_quantity = 100
+max_total = 1e6
+
 def validorder(order: Order):
     net = 0
     
     for item in order.items:
         if item.type == 'payment':
-            net += item.amount
+            if item.amount > -1 * max_item_amount and item.amount < max_item_amount:
+                net += int(item.amount)
         elif item.type == 'product':
-            net -= item.amount * item.quantity
+            if item.quantity > 0 and item.quantity <= max_quantity and item.amount > 0 and item.amount <= max_item_amount:
+                net -= int(item.amount) * item.quantity
+            if net > max_total or net < -1 * max_total:
+                return ("max amount exceeded")
         else:
             return("Invalid item type: %s" % item.type)
     
-    if net != 0:
+    if int(net) != 0:
         return("Order ID: %s - Payment imbalance: $%0.2f" % (order.id, net))
     else:
         return("Order ID: %s - Full payment received!" % order.id)
